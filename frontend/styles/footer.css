@@ -1,0 +1,51 @@
+/* File: app/styles/footer.css */
+.footer{
+    width:100%;
+    margin-top:120px;
+    background:#3b2217;
+    color:white;
+    padding:35px 6%;
+    transition: background .3s;
+}
+
+.footer-inner{
+    max-width:1280px;
+    margin:0 auto;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+.footer-left{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    color:#e8d9c9;
+    font-size:14px;
+}
+
+.footer-icon{
+    font-size:16px;
+}
+
+.footer-socials{
+    display:flex;
+    gap:20px;
+}
+
+.footer-socials a{
+    color:white;
+    display:flex;
+    transition:.3s;
+}
+
+.footer-socials a:hover{
+    color:#ffcc88;
+    transform:translateY(-3px);
+}
+
+@media (max-width: 560px){
+    .footer-inner{ flex-direction:column; text-align:center; }
+}

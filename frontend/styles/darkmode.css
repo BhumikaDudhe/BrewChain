@@ -1,0 +1,111 @@
+/* File: app/styles/darkmode.css (new file) */
+
+body.dark{
+    background: linear-gradient(160deg,#241811 0%,#1e140d 45%,#160e08 100%);
+}
+
+body.dark::before,
+body.dark::after{
+    opacity:.15;
+}
+
+/* Navbar */
+body.dark .navbar{
+    background:#2a1d15;
+    box-shadow:0 8px 25px rgba(0,0,0,.4);
+}
+
+body.dark .logo,
+body.dark .nav-links a{
+    color:#f0e2d3;
+}
+
+body.dark .nav-links a:hover{
+    color:#e0a76f;
+}
+
+/* Hero */
+body.dark .hero-container{
+    background: linear-gradient(135deg, #2a1d15 0%, #241811 100%);
+}
+
+body.dark .hero h1{
+    color:#f7ead9;
+}
+
+body.dark .description{
+    color:#cbb9a8;
+}
+
+body.dark .secondary-btn{
+    background:#2a1d15;
+    color:#f0e2d3;
+    border-color:#a86a41;
+}
+
+body.dark .wallet-card{
+    background:#2f2119;
+}
+
+body.dark .wallet-address,
+body.dark .wallet-balance{
+    color:#f7ead9;
+}
+
+/* Main section */
+body.dark .block{
+    background:#2a1d15;
+    border-color:rgba(255,255,255,.05);
+}
+
+body.dark .transaction-card h2,
+body.dark .packages-block h2,
+body.dark .package-title,
+body.dark .how-block h2,
+body.dark .dashboard-preview h2,
+body.dark .stat-card span,
+body.dark .mini-card h4,
+body.dark .timeline-step span,
+body.dark .dashboard span{
+    color:#f7ead9;
+}
+
+body.dark .subtitle{
+    color:#b8a698;
+}
+
+body.dark .dashboard,
+body.dark .mini-card,
+body.dark .stat-card{
+    background:#241811;
+}
+
+body.dark .graph-placeholder{
+    background:#241811;
+    border-color:#5c4530;
+}
+
+/* Testimonials */
+body.dark .testimonials h2{
+    color:#f7ead9;
+}
+
+body.dark .testimonial-subtitle{
+    color:#b8a698;
+}
+
+body.dark .testimonial-card{
+    background:#2a1d15;
+}
+
+body.dark .testimonial-card h3{
+    color:#f7ead9;
+}
+
+body.dark .testimonial-card p{
+    color:#cbb9a8;
+}
+
+body.dark .footer{
+    background:#241811;
+}
