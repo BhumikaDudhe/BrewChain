@@ -1,52 +1,68 @@
-
 import { BrowserProvider, Contract, parseEther } from "ethers";
 import { CONTRACT_ADDRESS } from "../constants/contractAddress";
 import { CONTRACT_ABI } from "../constants/contractABI";
 
 export async function sendTip(note) {
-
-    const provider = new BrowserProvider(window.ethereum);
-
-const network = await provider.getNetwork();
-console.log("Chain ID:", network.chainId.toString());
-
-const signer = await provider.getSigner();
-console.log("Wallet:", await signer.getAddress());
-
-const balance = await provider.getBalance(await signer.getAddress());
-console.log("Balance:", balance.toString());
-
   if (!window.ethereum) {
-    alert("Please install MetaMask!");
-    return;
+    return {
+      success: false,
+      message: "Please install MetaMask.",
+    };
   }
 
   try {
-    // Connect to MetaMask
     const provider = new BrowserProvider(window.ethereum);
 
-    // Get signer
     const signer = await provider.getSigner();
 
-    // Create contract instance
     const contract = new Contract(
       CONTRACT_ADDRESS,
       CONTRACT_ABI,
       signer
     );
 
-    // Send 0.001 ETH with the note
+    const amount = "0.001";
+
     const tx = await contract.sendTip(note, {
-      value: parseEther("0.001"),
+      value: parseEther(amount),
     });
 
-    alert("Transaction submitted! Waiting for confirmation...");
+    const receipt = await tx.wait();
 
-    await tx.wait();
+    if (receipt.status === 1) {
 
-    alert("🎉 Coffee sent successfully!");
+      // Refresh Supporter Wall automatically
+      window.dispatchEvent(new Event("tip-success"));
+
+      return {
+        success: true,
+        amount,
+        hash: receipt.hash,
+        wallet: await signer.getAddress(),
+      };
+    }
+
+    return {
+      success: false,
+      message: "Transaction failed.",
+    };
+
   } catch (error) {
     console.error(error);
-    alert("Transaction failed.");
+
+    if (error.code === 4001) {
+      return {
+        success: false,
+        message: "Transaction cancelled.",
+      };
+    }
+
+    return {
+      success: false,
+      message:
+        error.reason ||
+        error.shortMessage ||
+        "Transaction failed.",
+    };
   }
 }

@@ -5,6 +5,8 @@
 @import "../styles/homeLayout.css";
 @import "../styles/mainSection.css";
 @import "../styles/darkmode.css";
+@import "../styles/transaction-popup.css";
+@import "../styles/supporterWall.css";
 
 * {
   margin: 0;

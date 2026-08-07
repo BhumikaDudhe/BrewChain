@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import MainSection from "../components/MainSection";
+import SupporterWall from "../components/SupporterWall";
 import Testimonials from "../components/Testimonials";
 import Footer from "../components/Footer";
 
@@ -10,6 +11,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <MainSection />
+      <SupporterWall />
       <Testimonials />
       <Footer />
     </>

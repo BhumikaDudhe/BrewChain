@@ -1,38 +1,58 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connectWallet } from "../lib/wallet";
 
 export default function Navbar() {
-  const [walletAddress, setWalletAddress] = useState("");
+  const [wallet, setWallet] = useState(null);
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     const isDark = saved === "dark";
+
     setDarkMode(isDark);
     document.body.classList.toggle("dark", isDark);
+
+    autoConnect();
   }, []);
+
+  async function autoConnect() {
+    if (!window.ethereum) return;
+
+    const accounts = await window.ethereum.request({
+      method: "eth_accounts",
+    });
+
+    if (accounts.length > 0) {
+      const data = await connectWallet();
+      setWallet(data);
+    }
+  }
 
   const toggleTheme = () => {
     const next = !darkMode;
+
     setDarkMode(next);
+
     document.body.classList.toggle("dark", next);
+
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
   const handleConnect = async () => {
-    const wallet = await connectWallet();
-    if (wallet) {
-      setWalletAddress(wallet.address);
+    const data = await connectWallet();
+
+    if (data) {
+      setWallet(data);
     }
   };
 
   return (
     <nav className="navbar">
+
       <div className="logo">
-        <img src="/images/logo.png" alt="BrewChain" className="logo-icon" />
-        <span>BrewChain</span>
+        ☕ BrewChain
       </div>
 
       <ul className="nav-links">
@@ -43,32 +63,38 @@ export default function Navbar() {
       </ul>
 
       <div className="nav-actions">
+
         <button
-          className={`wallet-btn ${walletAddress ? "connected" : ""}`}
+          className={`wallet-btn ${wallet ? "connected" : ""}`}
           onClick={handleConnect}
         >
-          {walletAddress ? (
-            <span className="connected-content">
+          {wallet ? (
+            <>
               <span className="shine-dot"></span>
-              Connected 🎉
-            </span>
+
+              {wallet.shortAddress}
+            </>
           ) : (
             "Connect Wallet"
           )}
         </button>
 
-        <button className="avatar-btn" aria-label="Profile">
+        <button
+          className="avatar-btn"
+          aria-label="Profile"
+        >
           🦊
         </button>
 
         <button
           className="theme-btn"
           onClick={toggleTheme}
-          aria-label="Toggle dark mode"
         >
           {darkMode ? "☀️" : "🌙"}
         </button>
+
       </div>
+
     </nav>
   );
 }

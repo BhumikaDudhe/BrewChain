@@ -1,32 +1,38 @@
-import { BrowserProvider } from "ethers";
+import { BrowserProvider, formatEther } from "ethers";
 
 export async function connectWallet() {
-  // Check if MetaMask is installed
   if (!window.ethereum) {
-    alert("Please install MetaMask!");
     return null;
   }
 
   try {
-    // Request wallet connection
     await window.ethereum.request({
       method: "eth_requestAccounts",
     });
 
-    // Create provider
     const provider = new BrowserProvider(window.ethereum);
 
-    // Get signer
     const signer = await provider.getSigner();
 
-    // Get wallet address
     const address = await signer.getAddress();
+
+    const balance = await provider.getBalance(address);
+
+    const network = await provider.getNetwork();
 
     return {
       provider,
       signer,
       address,
+      shortAddress:
+        address.slice(0, 6) + "..." + address.slice(-4),
+      balance: Number(formatEther(balance)).toFixed(4),
+      network:
+        network.chainId === 11155111n
+          ? "Sepolia"
+          : network.name,
     };
+
   } catch (error) {
     console.error(error);
     return null;

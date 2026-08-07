@@ -2,17 +2,57 @@
 
 import { useState } from "react";
 import { sendTip } from "../lib/tip";
+import TransactionPopup from "./TransactionPopup";
+import { useWallet } from "../context/WalletContext";
 
 export default function Hero() {
+  const { wallet, connect } = useWallet();
   const [loading, setLoading] = useState(false);
+  const [popup, setPopup] = useState({
+  open: false,
+  status: "success",
+  amount: "",
+  hash: "",
+});
 
   const handleBuyCoffee = async () => {
-    setLoading(true);
-    await sendTip("☕ Thanks for the coffee!");
-    setLoading(false);
-  };
+  setLoading(true);
+
+  const result = await sendTip("☕ Thanks for the coffee!");
+
+  setLoading(false);
+
+  if (result.success) {
+    setPopup({
+      open: true,
+      status: "success",
+      amount: result.amount + " ETH",
+      hash: result.hash,
+    });
+  } else {
+    setPopup({
+      open: true,
+      status: "error",
+      amount: "",
+      hash: "",
+    });
+  }
+};
 
   return (
+    <>
+  <TransactionPopup
+    open={popup.open}
+    status={popup.status}
+    amount={popup.amount}
+    hash={popup.hash}
+    onClose={() =>
+      setPopup({
+        ...popup,
+        open: false,
+      })
+    }
+  />
     <section className="hero">
       <div className="hero-container">
 
@@ -55,9 +95,16 @@ export default function Hero() {
               {loading ? "Processing..." : "☕ Buy a Coffee"}
             </button>
 
-            <button className="secondary-btn">
-              🔗 Connect Wallet
-            </button>
+            <button
+  className="secondary-btn"
+  onClick={connect}
+>
+  🔗 {
+    wallet
+    ? wallet.shortAddress
+    : "Connect Wallet"
+  }
+</button>
           </div>
         </div>
 
@@ -72,13 +119,20 @@ export default function Hero() {
             <div className="wallet-card-top">
               <span className="wallet-icon">🦊</span>
               <div>
-                <p className="wallet-address">0x7F...A1D0</p>
-                <p className="wallet-network">Sepolia</p>
+                <p className="wallet-address">
+  {wallet ? wallet.shortAddress : "Not Connected"}
+</p>
+
+<p className="wallet-network">
+  {wallet ? wallet.network : "Sepolia"}
+</p>
               </div>
             </div>
 
             <div className="wallet-card-bottom">
-              <p className="wallet-balance">0.002 ETH</p>
+              <p className="wallet-balance">
+  {wallet ? wallet.balance : "0.0000"} ETH
+</p>
               <p className="wallet-label">
                 Wallet Balance <span className="dot"></span>
               </p>
@@ -88,5 +142,6 @@ export default function Hero() {
 
       </div>
     </section>
+    </>
   );
 }
