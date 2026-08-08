@@ -3,13 +3,29 @@
 export default function TransactionPopup({
   open,
   status,
- amount,
+  amount,
   hash,
+  message,
   onClose,
 }) {
   if (!open) return null;
 
   const success = status === "success";
+  const rejected = status === "rejected";
+
+  const heading = success
+    ? "Coffee Delivered!"
+    : rejected
+    ? "Transaction Cancelled"
+    : "Transaction Failed";
+
+  const body = success
+    ? "Your creator received a coffee successfully."
+    : rejected
+    ? "You declined the request in your wallet — no charge was made."
+    : (message || "Something went wrong. Please try again.");
+
+  const icon = success ? "☕" : rejected ? "🙅" : "❌";
 
   return (
     <div className="popup-overlay">
@@ -17,19 +33,15 @@ export default function TransactionPopup({
       <div className="transaction-popup">
 
         <div className="popup-icon">
-          {success ? "☕" : "❌"}
+          {icon}
         </div>
 
         <h2>
-          {success
-            ? "Coffee Delivered!"
-            : "Transaction Failed"}
+          {heading}
         </h2>
 
         <p className="popup-message">
-          {success
-            ? "Your creator received a coffee successfully."
-            : "Something went wrong."}
+          {body}
         </p>
 
         {success && (

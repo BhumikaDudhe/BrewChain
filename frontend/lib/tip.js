@@ -6,6 +6,7 @@ export async function sendTip(note) {
   if (!window.ethereum) {
     return {
       success: false,
+      status: "failed",
       message: "Please install MetaMask.",
     };
   }
@@ -44,6 +45,7 @@ export async function sendTip(note) {
 
     return {
       success: false,
+      status: "failed",
       message: "Transaction failed.",
     };
 
@@ -53,12 +55,14 @@ export async function sendTip(note) {
     if (error.code === 4001) {
       return {
         success: false,
-        message: "Transaction cancelled.",
+        status: "rejected",
+        message: "You declined the transaction in your wallet.",
       };
     }
 
     return {
       success: false,
+      status: "failed",
       message:
         error.reason ||
         error.shortMessage ||
