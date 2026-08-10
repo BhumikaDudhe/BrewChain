@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-contract TipJar {
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+
+contract TipJar is ReentrancyGuard {
 
     // Owner of the contract (Ifeoma)
     address public owner;
@@ -83,16 +85,17 @@ contract TipJar {
     }
 
     // Withdraw all ETH from contract
-    function withdraw() external onlyOwner {
+    function withdraw() external nonReentrant {
+    require(msg.sender == owner, "Only owner can withdraw");
 
-        uint256 balance = address(this).balance;
+    uint256 balance = address(this).balance;
+    require(balance > 0, "No funds to withdraw");
 
-        require(balance > 0, "No funds available");
+    (bool success, ) = owner.call{value: balance}("");
+    require(success, "Transfer failed");
 
-        payable(owner).transfer(balance);
-
-        emit FundsWithdrawn(owner, balance);
-    }
+    emit FundsWithdrawn(owner, balance);
+}
 
     // Check current contract balance
     function getContractBalance() external view returns (uint256) {
